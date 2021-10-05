@@ -19,7 +19,7 @@ app.use(express.static("public"));
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%    GL VARIABLES   %%%%%%%%%%%%%%%%%%%%%%%%%%%
-let Posts = [];
+let PostsArray = [];
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%    GET REQUESTS   %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -28,14 +28,14 @@ app.get('/',(req,res)=>{
   
   res.render('home',{
     homeStartingContent:homeStartingContent,
-    Posts:Posts
+    Posts:PostsArray
   })
 })
 
 app.get('/posts/:postTitle',(req,res)=>{
   const checkPostTitle = _.lowerCase(req.params.postTitle);
   // we loops our post array to check for the specific post in the url
-  Posts.forEach(post => {
+  PostsArray.forEach(post => {
     const pt = _.lowerCase(post.title);
     const pc = _.lowerCase(post.content);
     if ( checkPostTitle === pt ) { //if the postTitle in the url matches any of our Posts' title
@@ -47,6 +47,10 @@ app.get('/posts/:postTitle',(req,res)=>{
 // about page
 app.get('/about',(req,res)=>{
   res.render('about',{aboutContent:aboutContent})
+})
+// all posts page
+app.get('/allposts',(req,res)=>{
+  res.render('allposts',{Post:PostsArray})
 })
 // contact page
 app.get('/contact',(req,res)=>{
@@ -69,7 +73,7 @@ app.post('/compose',(req,res)=>{
     content:content
   }
   // Posts = [...Posts,post];
-  Posts.push(post);
+  PostsArray.push(post);
   res.redirect('/');
 })
 
