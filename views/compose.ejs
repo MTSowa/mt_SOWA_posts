@@ -1,16 +1,22 @@
 <%- include('./partials/header'); %> 
+<div class="my_own_container">
     <h2>Compose Post</h2>
     <div class="composePost-wrapper">
         <form action="/compose" method="post">
             <div class="mb-3 form-group">
                 <label for="composeText_title" class="form-label">Title</label>
-                <input type="text" class="form-control" id="composeText_title" name="composeText_title">
+                <input type="text" class="form-control" id="composePost_title" name="composeText_title">
+                <label for="composeText_name" class="form-label">Name</label>
+                <input type="text" class="form-control" id="composePost_name" name="composeText_name">
+                <label for="composeText_image" class="form-label">Upload Image</label>
+                <input type="file" disabled class="form-control" id="composePost_image" name="composeText_image" multiple='multiple'>
                 <label for="composeText">Content</label>
                 <textarea class="form-control" name="composeText_content" id="composeText" cols="30" rows="5"></textarea>
             </div>
             <button type="submit" name='post' class="btn btn-primary" value="##">Post</button>
         </form>
     </div>
+</div>
 <%- include('./partials/footer'); %> 
 
 

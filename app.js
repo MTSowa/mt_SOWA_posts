@@ -1,9 +1,13 @@
 //jshint esversion:6
 
 const express = require("express");
+const Formidable = require('formidable')
+const cloudinary = require('cloudinary')
+const {connection,mongoose,bptSchema} = require('./dbConnection');
 const ejs = require("ejs");
 // LOdash
 const _ = require('lodash');
+// const { formidable } = require("formidable");
 // const { title } = require("process");
 
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -19,7 +23,14 @@ app.use(express.static("public"));
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%    GL VARIABLES   %%%%%%%%%%%%%%%%%%%%%%%%%%%
-let PostsArray = [];
+// let PostsArray = [];
+
+
+// %%%%%%%%%%%%%%%%%%%%%%%%    DB Things   %%%%%%%%%%%%%%%%%%%%%%%%%%%
+connection();
+//model / Table
+const blogPostTest = mongoose.model('blogPost',bptSchema);
+//
 
 
 // %%%%%%%%%%%%%%%%%%%%%%%%    GET REQUESTS   %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,21 +38,39 @@ let PostsArray = [];
 app.get('/',(req,res)=>{
   
   res.render('home',{
-    homeStartingContent:homeStartingContent,
-    Posts:PostsArray
   })
 })
 
 app.get('/posts/:postTitle',(req,res)=>{
+
+  if(URIError){
+    res.render('nocontent');
+  }
   const checkPostTitle = _.lowerCase(req.params.postTitle);
   // we loops our post array to check for the specific post in the url
-  PostsArray.forEach(post => {
-    const pt = _.lowerCase(post.title);
-    const pc = _.lowerCase(post.content);
-    if ( checkPostTitle === pt ) { //if the postTitle in the url matches any of our Posts' title
-      res.render('post',{postTitle:pt,postContent:pc})
+
+  blogPostTest.find({},(err,docs)=>{
+    if(!err){
+     docs.forEach(post => {
+        let pt = _.lowerCase(post.title);
+        let pc = _.lowerCase(post.content);
+        if ( checkPostTitle === pt ) { //if the postTitle in the url matches any of our Posts' title
+          res.render('post',{postTitle:pt,postContent:pc})
+        }
+      });
+      res.render('allposts',{Post:docs})
+    }else{
+      console.log('There was an error getting the docs...'+ err.message())
     }
-  });
+  })
+
+  // PostsArray.forEach(post => {
+  //   const pt = _.lowerCase(post.title);
+  //   const pc = _.lowerCase(post.content);
+  //   if ( checkPostTitle === pt ) { //if the postTitle in the url matches any of our Posts' title
+  //     res.render('post',{postTitle:pt,postContent:pc})
+  //   }
+  // });
 })
 
 // about page
@@ -50,7 +79,14 @@ app.get('/about',(req,res)=>{
 })
 // all posts page
 app.get('/allposts',(req,res)=>{
-  res.render('allposts',{Post:PostsArray})
+  blogPostTest.find({},(err,docs)=>{
+    if(!err){
+      // return res.json(docs)
+      res.render('allposts',{Post:docs})
+    }else{
+      console.log('There was an error getting the docs...'+ err.message())
+    }
+  })
 })
 // contact page
 app.get('/contact',(req,res)=>{
@@ -66,20 +102,35 @@ app.get('/compose',(req,res)=>{
 
 // compose post page
 app.post('/compose',(req,res)=>{
-  let title = req.body.composeText_title;
-  let content = req.body.composeText_content;
-  let post = {
+
+const title = req.body.composeText_title;
+  const name = req.body.composeText_name;
+  const content = req.body.composeText_content;
+
+  //conditioning
+      //create and save collection
+  const blogPost = new blogPostTest({
     title:title,
-    content:content
-  }
-  // Posts = [...Posts,post];
-  PostsArray.push(post);
-  res.redirect('/');
+    name:name,
+    content:content,
+  })
+
+  blogPost.save();
+  
+  res.redirect('/compose')
+
+  //
+  // console.log('posting cleared... #basic')
+
 })
 
 
 
-
+// let form = Formidable({multiples:true})
+// form.parse(req,(err,fields,files)=>{
+//   // console.log(res.json(req))
+//   console.log([fields,files])
+// })
 
 
 
