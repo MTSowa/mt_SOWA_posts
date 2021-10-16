@@ -43,9 +43,6 @@ app.get('/',(req,res)=>{
 
 app.get('/posts/:postTitle',(req,res)=>{
 
-  if(URIError){
-    res.render('nocontent');
-  }
   const checkPostTitle = _.lowerCase(req.params.postTitle);
   // we loops our post array to check for the specific post in the url
 
