@@ -1,10 +1,9 @@
 //jshint esversion:6
 
 const express = require("express");
-const Formidable = require('formidable')
-const cloudinary = require('cloudinary')
+// const Formidable = require('formidable')
+// const cloudinary = require('cloudinary')
 const {connection,mongoose,bptSchema} = require('./dbConnection');
-const ejs = require("ejs");
 // LOdash
 const _ = require('lodash');
 // const { formidable } = require("formidable");

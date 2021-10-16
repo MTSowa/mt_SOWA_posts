@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const url = "mongodb://localhost:27017/blogPostTest"
+const url = "mongodb+srv://mtsowa:mtsowa@cluster0.hbzwi.mongodb.net/blogPostTest"
 
 const  connection = async function(){
     try {
