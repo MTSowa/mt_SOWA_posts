@@ -132,10 +132,13 @@ const title = req.body.composeText_title;
 
 
 
+let port = process.env.PORT;
+if(port == null || port == ""){
+  port = 4001;
+}
 
 
 
-
-app.listen(4001, function() {
+app.listen(port, function() {
   console.log("Server started on port 4001");
 });
